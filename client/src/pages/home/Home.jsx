@@ -13,10 +13,8 @@ const Home = () => {
           minHeight: 720,
           m: 2,
           display: "flex",
-          alignItems: "center",
+          alignItems: "start",
           justifyContent: "center",
-          flexWrap: "wrap",
-          gap: 1,
         }}
       >
         <Products />
