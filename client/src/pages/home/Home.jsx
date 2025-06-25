@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import Appbar from "../../components/appbar/Appbar";
 import Footer from "../../components/footer/Footer";
+import Products from "../product/Products";
 
 const Home = () => {
   return (
@@ -9,14 +10,16 @@ const Home = () => {
 
       <Box
         sx={{
-          height: 720,
+          minHeight: 720,
           m: 2,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
+          flexWrap: "wrap",
+          gap: 1,
         }}
       >
-        Products
+        <Products />
       </Box>
 
       <Footer />

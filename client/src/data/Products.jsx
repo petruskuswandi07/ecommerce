@@ -1,4 +1,4 @@
-export const products = [
+const products = [
   {
     _id: {
       $oid: "6566c165801e99be12650c13",
@@ -5346,3 +5346,5 @@ export const products = [
     __v: 1,
   },
 ];
+
+export default products;
