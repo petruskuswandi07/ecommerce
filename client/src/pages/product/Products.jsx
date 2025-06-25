@@ -9,16 +9,23 @@ import {
   Input,
   InputLabel,
   MenuItem,
+  Pagination,
   Select,
+  // Perlu diimpor Stack jika Anda ingin memusatkan pagination,
+  // meskipun di kode Anda saat ini menggunakan Box dengan justifyContent: "center"
+  // Stack,
 } from "@mui/material";
 import products from "../../data/Products";
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
 import { orange } from "@mui/material/colors";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 
 const Products = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryTerm, setCategoryTerm] = useState("all");
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const productsPerPage = 30;
 
   const searchFunction = (e) => {
     const { name, value } = e.target;
@@ -28,20 +35,38 @@ const Products = () => {
     } else if (name === "category") {
       setCategoryTerm(value);
     }
+    setCurrentPage(1);
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const filtered = (product) => {
-    const nameMatch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const categoryMatch = categoryTerm === "all" || product.category.toLowerCase().includes(categoryTerm.toLowerCase());
+  const filteredProduct = useMemo(() => {
+    return products.filter((product) => {
+      const nameMatch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
+      const categoryMatch =
+        categoryTerm === "all" ||
+        product.category.toLowerCase().includes(categoryTerm.toLowerCase());
+      return nameMatch && categoryMatch;
+    });
+  }, [products, searchTerm, categoryTerm]);
 
-    return nameMatch && categoryMatch;
+  const allCategories = useMemo(() => {
+    return [
+      ...new Set(products.map((product) => product.category)),
+    ];
+  }, [products]);
+
+  const startIndex = (currentPage - 1) * productsPerPage;
+  const endIndex = startIndex + productsPerPage;
+
+  const paginatedProducts = filteredProduct.slice(startIndex, endIndex);
+  
+  const pageCount = Math.ceil(filteredProduct.length / productsPerPage) || 1; 
+
+  const pageChanging = (event, page) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
-
-  const filteredProduct = products.filter(filtered);
-
-  const allCategories = [
-    ...new Set(products.map((product) => product.category)),
-  ];
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", width: "100%", p: 2 }}>
@@ -55,9 +80,7 @@ const Products = () => {
           sx={{ p: 1 }}
         />
         <FormControl sx={{ width: 300 }}>
-          <InputLabel id="category-select-label">
-            Kategori
-          </InputLabel>
+          <InputLabel id="category-select-label">Kategori</InputLabel>
           <Select
             labelId="category-select-label"
             name="category"
@@ -84,8 +107,8 @@ const Products = () => {
           mt: 2,
         }}
       >
-        {filteredProduct.length > 0 ? (
-          filteredProduct.map((product) => (
+        {paginatedProducts.length > 0 ? ( 
+          paginatedProducts.map((product) => (
             <Card key={product.name} sx={{ width: 210, minHeight: 280 }}>
               <CardActionArea>
                 <CardMedia
@@ -114,10 +137,18 @@ const Products = () => {
             </Card>
           ))
         ) : (
-          <Typography variant="h6" color="text.secondary">
+          <Typography variant="h6" color="text.secondary" sx={{ width: '100%', textAlign: 'center', mt: 4 }}>
             Tidak ada produk yang ditemukan.
           </Typography>
         )}
+      </Box>
+      <Box sx={{ p: 2, display: "flex", justifyContent: "center" }}>
+        <Pagination
+            count={pageCount}
+            page={currentPage}
+            onChange={pageChanging}
+            color="primary"
+          />
       </Box>
     </Box>
   );
