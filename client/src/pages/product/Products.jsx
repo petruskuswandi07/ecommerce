@@ -2,7 +2,15 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import { Box, CardActionArea, Input } from "@mui/material";
+import {
+  Box,
+  CardActionArea,
+  FormControl,
+  Input,
+  InputLabel,
+  MenuItem,
+  Select,
+} from "@mui/material";
 import products from "../../data/Products";
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
 import { orange } from "@mui/material/colors";
@@ -10,27 +18,61 @@ import { useState } from "react";
 
 const Products = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [categoryTerm, setCategoryTerm] = useState("all");
 
   const searchFunction = (e) => {
-    setSearchTerm(e.target.value);
+    const { name, value } = e.target;
+
+    if (name === "search") {
+      setSearchTerm(value);
+    } else if (name === "category") {
+      setCategoryTerm(value);
+    }
   };
 
   const filtered = (product) => {
-    return product.name.toLowerCase().includes(searchTerm.toLowerCase())
-  }
+    const nameMatch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const categoryMatch = categoryTerm === "all" || product.category.toLowerCase().includes(categoryTerm.toLowerCase());
 
-  const filteredProduct = products.filter(filtered)
+    return nameMatch && categoryMatch;
+  };
+
+  const filteredProduct = products.filter(filtered);
+
+  const allCategories = [
+    ...new Set(products.map((product) => product.category)),
+  ];
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", width: "100%", p: 2 }}>
-      <Box>
+      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
         <Input
           placeholder="Cari sesuatu..."
+          name="search"
           type="text"
           onChange={searchFunction}
           value={searchTerm}
           sx={{ p: 1 }}
         />
+        <FormControl sx={{ width: 300 }}>
+          <InputLabel id="category-select-label">
+            Kategori
+          </InputLabel>
+          <Select
+            labelId="category-select-label"
+            name="category"
+            label="kategori"
+            value={categoryTerm}
+            onChange={searchFunction}
+          >
+            <MenuItem value="all">Semua Kategori</MenuItem>
+            {allCategories.map((item, index) => (
+              <MenuItem key={index} value={item}>
+                {item}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       </Box>
 
       <Box
@@ -42,34 +84,40 @@ const Products = () => {
           mt: 2,
         }}
       >
-        {filteredProduct.map((product) => (
-          <Card key={product.name} sx={{ width: 210, minHeight: 280 }}>
-            <CardActionArea>
-              <CardMedia
-                component="img"
-                alt={product.name}
-                image={product.image[0] ? product.image[0].link : null}
-                sx={{ minHeight: 200, objectFit: "cover" }}
-              />
-            </CardActionArea>
-            <CardContent>
-              <Typography>{product.name}</Typography>
-              <Typography fontWeight="bold">{`Rp${parseFloat(
-                product.price
-              ).toLocaleString("id-ID")}`}</Typography>
+        {filteredProduct.length > 0 ? (
+          filteredProduct.map((product) => (
+            <Card key={product.name} sx={{ width: 210, minHeight: 280 }}>
+              <CardActionArea>
+                <CardMedia
+                  component="img"
+                  alt={product.name}
+                  image={product.image[0] ? product.image[0].link : null}
+                  sx={{ minHeight: 200, objectFit: "cover" }}
+                />
+              </CardActionArea>
+              <CardContent>
+                <Typography>{product.name}</Typography>
+                <Typography fontWeight="bold">{`Rp${parseFloat(
+                  product.price
+                ).toLocaleString("id-ID")}`}</Typography>
 
-              <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                <Typography sx={{ display: "flex", alignItems: "center" }}>
-                  <StarRoundedIcon sx={{ color: orange[500] }} />{" "}
-                  {product.rating}
-                </Typography>
-                <Typography sx={{ display: "flex", alignItems: "center" }}>
-                  stok: {product.stock}
-                </Typography>
-              </Box>
-            </CardContent>
-          </Card>
-        ))}
+                <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                  <Typography sx={{ display: "flex", alignItems: "center" }}>
+                    <StarRoundedIcon sx={{ color: orange[500] }} />{" "}
+                    {product.rating}
+                  </Typography>
+                  <Typography sx={{ display: "flex", alignItems: "center" }}>
+                    stok: {product.stock}
+                  </Typography>
+                </Box>
+              </CardContent>
+            </Card>
+          ))
+        ) : (
+          <Typography variant="h6" color="text.secondary">
+            Tidak ada produk yang ditemukan.
+          </Typography>
+        )}
       </Box>
     </Box>
   );
