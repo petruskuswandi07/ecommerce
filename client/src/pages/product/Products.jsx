@@ -11,9 +11,6 @@ import {
   MenuItem,
   Pagination,
   Select,
-  // Perlu diimpor Stack jika Anda ingin memusatkan pagination,
-  // meskipun di kode Anda saat ini menggunakan Box dengan justifyContent: "center"
-  // Stack,
 } from "@mui/material";
 import products from "../../data/Products";
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
@@ -37,12 +34,14 @@ const Products = () => {
     }
     setCurrentPage(1);
 
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const filteredProduct = useMemo(() => {
     return products.filter((product) => {
-      const nameMatch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
+      const nameMatch = product.name
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
       const categoryMatch =
         categoryTerm === "all" ||
         product.category.toLowerCase().includes(categoryTerm.toLowerCase());
@@ -51,21 +50,24 @@ const Products = () => {
   }, [products, searchTerm, categoryTerm]);
 
   const allCategories = useMemo(() => {
-    return [
-      ...new Set(products.map((product) => product.category)),
-    ];
+    return [...new Set(products.map((product) => product.category))];
   }, [products]);
 
   const startIndex = (currentPage - 1) * productsPerPage;
   const endIndex = startIndex + productsPerPage;
 
   const paginatedProducts = filteredProduct.slice(startIndex, endIndex);
-  
-  const pageCount = Math.ceil(filteredProduct.length / productsPerPage) || 1; 
+
+  const pageCount = Math.ceil(filteredProduct.length / productsPerPage) || 1;
 
   const pageChanging = (event, page) => {
     setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const detailProductPage = (product) => {
+    const link = `http://localhost:5173/${product}`;
+    window.open(link);
   };
 
   return (
@@ -107,9 +109,17 @@ const Products = () => {
           mt: 2,
         }}
       >
-        {paginatedProducts.length > 0 ? ( 
+        {paginatedProducts.length > 0 ? (
           paginatedProducts.map((product) => (
-            <Card key={product.name} sx={{ width: 210, minHeight: 280 }}>
+            <Card
+              key={product.name}
+              sx={{
+                width: 210,
+                minHeight: 280,
+                "&:hover": { cursor: "pointer" },
+              }}
+              onClick={() => detailProductPage(product.name)}
+            >
               <CardActionArea>
                 <CardMedia
                   component="img"
@@ -137,18 +147,22 @@ const Products = () => {
             </Card>
           ))
         ) : (
-          <Typography variant="h6" color="text.secondary" sx={{ width: '100%', textAlign: 'center', mt: 4 }}>
+          <Typography
+            variant="h6"
+            color="text.secondary"
+            sx={{ width: "100%", textAlign: "center", mt: 4 }}
+          >
             Tidak ada produk yang ditemukan.
           </Typography>
         )}
       </Box>
       <Box sx={{ p: 2, display: "flex", justifyContent: "center" }}>
         <Pagination
-            count={pageCount}
-            page={currentPage}
-            onChange={pageChanging}
-            color="primary"
-          />
+          count={pageCount}
+          page={currentPage}
+          onChange={pageChanging}
+          color="primary"
+        />
       </Box>
     </Box>
   );
