@@ -154,7 +154,7 @@ const DetailProduct = () => {
             <Typography dangerouslySetInnerHTML={createMarkUp(product.desc)} />
           </Box>
         </Box>
-        <Box sx={{ display: "flex", flex: 1, p: 2 }}>
+        <Box sx={{ display: "flex", flex: 1, p: 2, justifyContent: "center" }}>
           <Order />
         </Box>
       </Box>

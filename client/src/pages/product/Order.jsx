@@ -1,17 +1,19 @@
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box, Button, IconButton, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
+import SelectOptions from "./SelectOptions";
 
 const Order = () => {
   return (
     <Box
       sx={{
-        width: "100%",
+        width: "80%",
         borderRadius: "10px",
         padding: "10px",
         display: "flex",
         flexDirection: "column",
         gap: "10px",
+        height: "460px",
       }}
     >
       <Typography variant="h6" fontWeight="bold">
@@ -23,7 +25,6 @@ const Order = () => {
           sx={{
             display: "flex",
             gap: "15px",
-            borderRadius: "5px",
             padding: "2px",
           }}
         >
@@ -57,6 +58,64 @@ const Order = () => {
           Total Stok: 30
         </Box>
       </Box>
+
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          padding: "5px",
+        }}
+      >
+        <Typography fontWeight="bold" fontSize={18}>
+          Subtotal
+        </Typography>
+
+        <Typography fontWeight="bold" fontSize={20}>
+          Rp3.000.000
+        </Typography>
+      </Box>
+
+      <Typography fontWeight="bold">Alamat Pengiriman</Typography>
+
+      <Box>
+        <SelectOptions />
+      </Box>
+
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          padding: "5px",
+        }}
+      >
+        <Typography fontWeight="bold" fontSize={18}>
+          Ongkir
+        </Typography>
+
+        <Typography fontWeight="bold" fontSize={20}>
+          Rp3.000.000
+        </Typography>
+      </Box>
+
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          padding: "5px",
+        }}
+      >
+        <Typography fontWeight="bold" fontSize={18}>
+          Total
+        </Typography>
+
+        <Typography fontWeight="bold" fontSize={20}>
+          Rp3.000.000
+        </Typography>
+      </Box>
+
+      <Button variant="contained">Keranjang</Button>
+
+      <Button variant="outlined">Beli</Button>
     </Box>
   );
 };
