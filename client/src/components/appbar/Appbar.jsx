@@ -10,7 +10,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { useState } from "react";
 
 const Appbar = () => {
-  const user = "admin";
+  const user = "";
 
   const userMenu = ["Profile", "Orders", "Logout"];
   const adminMenu = ["Setting", "Dashboard", "Logout"];

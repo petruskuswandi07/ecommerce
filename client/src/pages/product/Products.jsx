@@ -16,8 +16,11 @@ import products from "../../data/Products";
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
 import { orange } from "@mui/material/colors";
 import { useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Products = () => {
+  const navigate = useNavigate();
+
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryTerm, setCategoryTerm] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
@@ -66,8 +69,7 @@ const Products = () => {
   };
 
   const detailProductPage = (product) => {
-    const link = `http://localhost:5173/${product}`;
-    window.open(link);
+    navigate(`/${product}`)
   };
 
   return (
