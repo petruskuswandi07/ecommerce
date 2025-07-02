@@ -2,18 +2,30 @@ import { Box, Button, IconButton, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import SelectOptions from "./SelectOptions";
+import { useEffect, useState } from "react";
 
 const Order = () => {
+  const [province, setProvince] = useState("");
+  const [city, setCity] = useState("");
+  const [courier, setCourier] = useState("");
+  const [service, setService] = useState("");
+  const [address, setAddress] = useState("");
+
+  useEffect(() => {
+    console.log(province, city, courier, service, address);
+  }, [province, city, courier, service, address]);
+
   return (
     <Box
       sx={{
         width: "80%",
         borderRadius: "10px",
-        padding: "10px",
+        padding: "15px",
         display: "flex",
         flexDirection: "column",
         gap: "10px",
-        height: "460px",
+        height: "700px",
+        boxShadow: 6,
       }}
     >
       <Typography variant="h6" fontWeight="bold">
@@ -78,7 +90,13 @@ const Order = () => {
       <Typography fontWeight="bold">Alamat Pengiriman</Typography>
 
       <Box>
-        <SelectOptions />
+        <SelectOptions
+          provinsi={setProvince}
+          kota={setCity}
+          kurir={setCourier}
+          layanan={setService}
+          alamat={setAddress}
+        />
       </Box>
 
       <Box

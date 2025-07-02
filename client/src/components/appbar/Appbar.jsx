@@ -8,6 +8,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Appbar = () => {
   const user = "";
@@ -17,27 +18,35 @@ const Appbar = () => {
 
   const [open, setOpen] = useState(null);
 
+  const navigate = useNavigate();
+
   const menuOpen = (event) => {
     setOpen(event.currentTarget);
   };
 
-  const menuClose = (event) => {
+  const menuClose = () => {
     setOpen(null);
+  };
+
+  const handleLogoClick = () => {
+    navigate("/");
   };
 
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" sx={{ backgroundColor: "#7B1FA2" }}>
         <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-          <img
-            src="/logo.png"
-            alt="logo"
-            style={{
-              height: "50px",
-              width: "120px",
-              objectFit: "contain",
-            }}
-          />
+          <IconButton onClick={handleLogoClick}>
+            <img
+              src="/logo.png"
+              alt="logo"
+              style={{
+                height: "50px",
+                width: "120px",
+                objectFit: "contain",
+              }}
+            />
+          </IconButton>
           <Box sx={{ display: "flex", gap: 1 }}>
             <IconButton color="inherit">
               <ShoppingCartOutlinedIcon />

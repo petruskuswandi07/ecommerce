@@ -1,4 +1,4 @@
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box, IconButton, Typography, useMediaQuery, useTheme } from "@mui/material";
 import Appbar from "../../components/appbar/Appbar";
 import Footer from "../../components/footer/Footer";
 import { orange } from "@mui/material/colors";
@@ -6,13 +6,17 @@ import StarRoundedIcon from "@mui/icons-material/StarRounded";
 import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import { useState } from "react";
-import Order from "./Order";
+import Order from "./Order"; // Pastikan path ini benar
 
 const createMarkUp = (html) => {
   return { __html: html };
 };
 
 const DetailProduct = () => {
+  const theme = useTheme(); // Dapatkan tema MUI
+  // Gunakan useMediaQuery untuk mendeteksi ukuran layar kecil
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("md")); // true jika layar <= 'md'
+
   const product = {
     _id: {
       $oid: "6566c165801e99be12650c13",
@@ -62,27 +66,48 @@ const DetailProduct = () => {
   const [imageIndex, setIndex] = useState(0);
 
   const left = () => {
-    setIndex((imageIndex - 1 + product.image.length) % product.image.length);
+    setIndex((prevIndex) => (prevIndex - 1 + product.image.length) % product.image.length);
   };
 
   const right = () => {
-    setIndex((imageIndex + 1) % product.image.length);
+    setIndex((prevIndex) => (prevIndex + 1) % product.image.length);
   };
 
   return (
     <Box>
       <Appbar />
-      <Box sx={{ display: "flex", minHeight: "85vh" }}>
-        <Box sx={{ display: "flex", flex: 2, alignItems: "start" }}>
+      {/* Main content container */}
+      <Box
+        sx={{
+          display: "flex",
+          minHeight: "85vh",
+          // Mengubah arah flex menjadi kolom pada layar kecil
+          flexDirection: isSmallScreen ? "column" : "row",
+          alignItems: "flex-start", // Menjaga alignment di desktop
+          padding: isSmallScreen ? "16px" : "32px", // Menambah padding responsif
+        }}
+      >
+        {/* Product Image & Details Section */}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: isSmallScreen ? "column" : "row", // Menumpuk detail & gambar di mobile
+            flex: isSmallScreen ? "none" : 2, // Nonaktifkan flex scaling di mobile
+            width: isSmallScreen ? "100%" : "auto", // Lebar penuh di mobile
+            alignItems: "flex-start",
+            gap: isSmallScreen ? "16px" : "0px", // Jarak antara gambar dan detail di mobile
+          }}
+        >
           {/* Image */}
           <Box
             sx={{
-              flex: 1,
+              flex: 1, // Tetap flex 1 untuk gambar
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "center",
-              p: 2,
+              p: isSmallScreen ? 0 : 2, // Padding 0 di mobile untuk gambar
+              width: isSmallScreen ? "100%" : "auto", // Lebar penuh di mobile
             }}
           >
             <Box
@@ -90,45 +115,52 @@ const DetailProduct = () => {
                 position: "relative",
                 display: "flex",
                 justifyContent: "center",
+                width: isSmallScreen ? "100%" : "auto", // Pastikan wrapper gambar juga responsif
+                maxWidth: "450px", // Batasi lebar maksimum
               }}
             >
               <img
                 src={product?.image[imageIndex].link}
                 alt={product.name}
                 style={{
-                  height: "450px",
-                  width: "450px",
+                  height: isSmallScreen ? "auto" : "450px", // Tinggi otomatis di mobile
+                  width: "100%", // Lebar penuh kontainer
+                  maxWidth: "450px", // Batasi lebar maksimum
                   borderRadius: "10px",
-                  objectFit: "cover",
+                  objectFit: "contain", // Gunakan 'contain' agar gambar tidak terpotong
                 }}
               />
-            </Box>
+              {/* Image Navigation Buttons */}
+              <Box
+                sx={{
+                  position: "absolute",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  width: "100%", // Mengisi lebar gambar
+                  display: "flex",
+                  justifyContent: "space-between",
+                  maxWidth: "450px", // Sesuaikan dengan maxWidth gambar
+                }}
+              >
+                <IconButton onClick={left} sx={{ backgroundColor: 'rgba(255,255,255,0.7)', '&:hover': { backgroundColor: 'rgba(255,255,255,0.9)' }, ml: 1 }}>
+                  <ArrowLeftIcon />
+                </IconButton>
 
-            <Box
-              sx={{
-                position: "absolute",
-                minWidth: "530px",
-                display: "flex",
-                justifyContent: "space-between",
-              }}
-            >
-              <IconButton onClick={left}>
-                <ArrowLeftIcon />
-              </IconButton>
-
-              <IconButton onClick={right}>
-                <ArrowRightIcon />
-              </IconButton>
+                <IconButton onClick={right} sx={{ backgroundColor: 'rgba(255,255,255,0.7)', '&:hover': { backgroundColor: 'rgba(255,255,255,0.9)' }, mr: 1 }}>
+                  <ArrowRightIcon />
+                </IconButton>
+              </Box>
             </Box>
           </Box>
           {/* Detail */}
           <Box
             sx={{
               display: "flex",
-              flex: 1,
-              p: 2,
+              flex: 1, // Detail mengambil sisa ruang
+              p: isSmallScreen ? 2 : 2, // Padding konsisten atau disesuaikan
               gap: 1,
               flexDirection: "column",
+              width: isSmallScreen ? "100%" : "auto", // Lebar penuh di mobile
             }}
           >
             <Typography variant="h5" fontWeight="bold">
@@ -154,7 +186,18 @@ const DetailProduct = () => {
             <Typography dangerouslySetInnerHTML={createMarkUp(product.desc)} />
           </Box>
         </Box>
-        <Box sx={{ display: "flex", flex: 1, p: 2, justifyContent: "center" }}>
+
+        {/* Order Section */}
+        <Box
+          sx={{
+            display: "flex",
+            flex: isSmallScreen ? "none" : 1, // Nonaktifkan flex scaling di mobile
+            width: isSmallScreen ? "100%" : "auto", // Lebar penuh di mobile
+            p: isSmallScreen ? 0 : 2, // Padding 0 di mobile agar Order komponen mengelola sendiri
+            justifyContent: "center",
+            mt: isSmallScreen ? 2 : 0, // Margin top di mobile untuk memisahkan dari detail produk
+          }}
+        >
           <Order />
         </Box>
       </Box>
