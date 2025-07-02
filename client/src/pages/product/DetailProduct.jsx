@@ -1,4 +1,10 @@
-import { Box, IconButton, Typography, useMediaQuery, useTheme } from "@mui/material";
+import {
+  Box,
+  IconButton,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import Appbar from "../../components/appbar/Appbar";
 import Footer from "../../components/footer/Footer";
 import { orange } from "@mui/material/colors";
@@ -66,7 +72,10 @@ const DetailProduct = () => {
   const [imageIndex, setIndex] = useState(0);
 
   const left = () => {
-    setIndex((prevIndex) => (prevIndex - 1 + product.image.length) % product.image.length);
+    setIndex(
+      (prevIndex) =>
+        (prevIndex - 1 + product.image.length) % product.image.length
+    );
   };
 
   const right = () => {
@@ -127,7 +136,7 @@ const DetailProduct = () => {
                   width: "100%", // Lebar penuh kontainer
                   maxWidth: "450px", // Batasi lebar maksimum
                   borderRadius: "10px",
-                  objectFit: "contain", // Gunakan 'contain' agar gambar tidak terpotong
+                  objectFit: "cover", // Gunakan 'contain' agar gambar tidak terpotong
                 }}
               />
               {/* Image Navigation Buttons */}
@@ -142,11 +151,25 @@ const DetailProduct = () => {
                   maxWidth: "450px", // Sesuaikan dengan maxWidth gambar
                 }}
               >
-                <IconButton onClick={left} sx={{ backgroundColor: 'rgba(255,255,255,0.7)', '&:hover': { backgroundColor: 'rgba(255,255,255,0.9)' }, ml: 1 }}>
+                <IconButton
+                  onClick={left}
+                  sx={{
+                    backgroundColor: "rgba(255,255,255,0.7)",
+                    "&:hover": { backgroundColor: "rgba(255,255,255,0.9)" },
+                    ml: 1,
+                  }}
+                >
                   <ArrowLeftIcon />
                 </IconButton>
 
-                <IconButton onClick={right} sx={{ backgroundColor: 'rgba(255,255,255,0.7)', '&:hover': { backgroundColor: 'rgba(255,255,255,0.9)' }, mr: 1 }}>
+                <IconButton
+                  onClick={right}
+                  sx={{
+                    backgroundColor: "rgba(255,255,255,0.7)",
+                    "&:hover": { backgroundColor: "rgba(255,255,255,0.9)" },
+                    mr: 1,
+                  }}
+                >
                   <ArrowRightIcon />
                 </IconButton>
               </Box>
